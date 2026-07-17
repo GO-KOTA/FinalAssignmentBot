@@ -233,8 +233,40 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`Web server listening on port ${port}`);
 });
 
-console.log("Discordへのログインを開始します。");
+async function startDiscordClient() {
+  console.log("Discord APIへの接続確認を開始します。");
 
-client.login(process.env.DISCORD_TOKEN).catch((error) => {
-  console.error("Discordへのログインに失敗しました:", error);
-});
+  try {
+    const gatewayResponse = await fetch(
+      "https://discord.com/api/v10/gateway/bot",
+      {
+        headers: {
+          Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
+        },
+        signal: AbortSignal.timeout(10_000),
+      },
+    );
+
+    console.log(`Discord Gateway APIの応答: HTTP ${gatewayResponse.status}`);
+
+    if (!gatewayResponse.ok) {
+      console.error(
+        "Discord Gateway情報を取得できません。RenderのDISCORD_TOKENを確認してください。",
+      );
+      return;
+    }
+
+    const gateway = await gatewayResponse.json();
+    console.log(`Discord Gateway URLを取得しました: ${gateway.url}`);
+    console.log(
+      `Discordセッション開始可能回数: ${gateway.session_start_limit?.remaining ?? "不明"}`,
+    );
+
+    console.log("Discordへのログインを開始します。");
+    await client.login(process.env.DISCORD_TOKEN);
+  } catch (error) {
+    console.error("Discordへの接続またはログインに失敗しました:", error);
+  }
+}
+
+startDiscordClient();
