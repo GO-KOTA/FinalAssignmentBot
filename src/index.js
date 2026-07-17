@@ -137,9 +137,19 @@ function splitDiscordMessage(text, maxLength = 1900) {
 }
 
 client.once(Events.ClientReady, async (readyClient) => {
-  await readyClient.application.commands.set(commands);
-  console.log(`${readyClient.user.tag} としてログインしました。`);
-  console.log("/help と /議事録 を登録しました。");
+  console.log(`${readyClient.user.tag} としてDiscordへ接続しました。`);
+  console.log("Discordコマンドの登録を開始します。");
+
+  try {
+    await readyClient.application.commands.set(commands);
+    console.log("/help と /議事録 を登録しました。");
+  } catch (error) {
+    console.error("Discordコマンドの登録に失敗しました:", error);
+  }
+});
+
+client.on(Events.Error, (error) => {
+  console.error("Discordクライアントエラー:", error);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
@@ -223,4 +233,8 @@ app.listen(port, "0.0.0.0", () => {
   console.log(`Web server listening on port ${port}`);
 });
 
-client.login(process.env.DISCORD_TOKEN);
+console.log("Discordへのログインを開始します。");
+
+client.login(process.env.DISCORD_TOKEN).catch((error) => {
+  console.error("Discordへのログインに失敗しました:", error);
+});
