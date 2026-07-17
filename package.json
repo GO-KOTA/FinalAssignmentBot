@@ -1,0 +1,22 @@
+{
+  "name": "final-assignment-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Discordの会話から議事録を作成する生成AIボット",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^2.10.0",
+    "discord.js": "^14.27.0",
+    "dotenv": "^17.4.2"
+  },
+  "engines": {
+    "node": "22.22.x"
+  }
+}

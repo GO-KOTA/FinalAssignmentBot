@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    container_name: final_assignment_bot
+    working_dir: /usr/src/app
+    environment:
+      TZ: "Asia/Tokyo"
+    volumes:
+      - .:/usr/src/app
+    command: npm run start
+
+volumes:
+  app:
